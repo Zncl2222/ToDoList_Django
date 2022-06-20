@@ -1,6 +1,0 @@
-django
-pathlib
-dj_database_url
-dj_static
-psycopg2
-gunicorn
