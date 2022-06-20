@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+    <style>
+        div{
+            display: inline-block;
+        }
+    </style>
+    <script src="{% static 'ajax.js' %}"></script>
+    <script>
+        const url = "{% url 'todos' %}";
+        getAllTodos(url,0);
+    </script>
+    
+</head>
+
+<body>
+
+    <div class="container" style="display:flex; flex-direction: column;">
+        <div class="row">
+            <div class ="col">
+            </div>
+            <div class="col-7">
+                <h1>待辦事項</h1>
+                <p style="color:red;display:inline-block">*</p><p style="display:inline-block">項目</p>
+                
+                <form id="addtodoform">{% csrf_token %}
+                    <div class="mb-3 form-check">
+                        <input type="text" id="content" name="content" placeholder="Task" style="width:30rem">
+                        <button type="submit" id="send" class="btn btn-primary">送出</button>
+                    </div>
+                </form>
+                <p id="blank-warning" style="color:red"></p>
+
+            </div>
+            <div class ="col">
+            </div>
+        </div>
+    
+        <div class="row">
+
+            <div class ="col">
+            </div>
+            
+            <div class ="col-7">
+            
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" 
+                        data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" style="width:23.3rem">未完成</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" 
+                        data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" style="width:23.3rem">已完成</button>
+                      </li>
+                </ul>
+                
+                <div class="tab-content" id="myTabContent">
+                    <div id="home" class="tab-pane fade show active" role="tabpanel" aria-labelledby="home-tab">
+                    
+                            <table class>
+
+                                <p id="todoList"></p>
+
+                            </table>
+                        
+                    </div>
+
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                        <table id="completeList">
+                        
+                    </table>
+                    </div>
+
+                </div>
+    
+            </div>
+
+            <div class ="col">
+            </div>
+
+        </div>
+
+    </div>
+    
+    {% block javascript %}
+    <script>
+
+        function clicked_remove(message){
+            
+            if(confirm("確定刪除?")){
+                
+                const delete_url = `/deleteTodoItem/${message}/`;
+                
+                deleteTodo(delete_url);
+            }
+            else{
+                return false;
+            };
+        }
+
+        function clicked_complete(message){
+            
+            if(confirm("確定完成?")){
+                
+                const complete_url = `/completeTodo/${message}/`;
+                
+                completeTodo(complete_url);
+            }
+            else{
+                return false;
+            };
+        }
+
+        $(function() {
+           
+            const url = "{% url 'todos' %}";
+    
+            $("#addtodoform").on('submit', (e) => {
+                
+                // prevent page reload
+                e.preventDefault();
+
+                const formData = {
+                    task: addtodoform.elements["content"].value,
+                }
+                addTodo(url, formData);
+                
+                $("#addtodoform").trigger("reset");
+
+            });
+
+        });
+
+    </script>
+    <script src="{% static 'ajax.js' %}"></script>
+    {% endblock %}
+
+</body>
+
+
+
+
+</html>

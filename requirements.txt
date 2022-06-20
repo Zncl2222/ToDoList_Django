@@ -1,0 +1,8 @@
+django
+pathlib
+whitenoise
+djangorestframework
+dj_database_url
+dj_static
+psycopg2
+gunicorn
